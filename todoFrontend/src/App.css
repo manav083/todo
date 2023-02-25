@@ -1,0 +1,22 @@
+#root {
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.enterTitle {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.inputButton {
+  text-align: center;
+  margin-left: 50px;
+}
+
+.inputButton input{
+  height: 25px;
+}
+
+
+
