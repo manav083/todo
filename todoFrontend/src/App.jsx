@@ -6,12 +6,10 @@ import Update from "./Update";
 import Delete from "./Delete";
 // import { useNavigate } from "react-router-dom";
 
-const rootUrl = "http://localhost:3001/user";
+const rootUrl = "http://localhost:3001/todo";
 
 function App() {
   const [todo, setTodo] = useState([]);
-  const [updatedTitle, setUpdatedTitle] = useState("");
-  // const history = useNavigate();
 
   const handleTodo = (todo) => {
     setTodo(todo);
@@ -31,37 +29,42 @@ function App() {
     <>
       <h1 style={{ textAlign: "center" }}>Todo List App</h1>
       <div>
-        <div>
-          <Add handleTodo={handleTodo} todo={todo} />
-        </div>
-        <table style={{ marginTop: 70, width: "90vw", position: "absolute" }}>
-          <tr>
-            <th>S No.</th>
-            <th>Task Name</th>
-            <th>Description</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-          {todo &&
-            todo.map((ele, index) => (
-              <>
-                <tr style={{ textAlign: "center" }}>
-                  <td>{index + 1}</td>
-                  <td>{ele.title}</td>
-                  <td>{ele.description}</td>
-                  <td>{ele.status}</td>
-                  <td>
-                    <span>
-                        <Delete id={ele._id} index={index} handleTodo={handleTodo} todo={todo} />
-                    </span>
-                    <span>
-                      <Update element={ele} handleTodo={handleTodo} todo={todo} index={index}/>
-                    </span>
-                  </td>
-                </tr>
-              </>
-            ))}
-        </table>
+        <Add handleTodo={handleTodo} todo={todo} />
+      </div>
+      <div className="cardDiv">
+        {todo &&
+          todo.map((ele, index) => (
+            <>
+              <div key={index} className="cardBody">
+                <p>
+                  Title: <span>{ele.title}</span>
+                  <br />
+                </p>
+                <p>
+                  Description: <span>{ele.description}</span>
+                </p>
+                <p>
+                  Status: <span>{ele.status}</span>
+                </p>
+                {/* <span>
+                  <Delete
+                    id={ele._id}
+                    index={index}
+                    handleTodo={handleTodo}
+                    todo={todo}
+                  />
+                </span>
+                <span>
+                  <Update
+                    element={ele}
+                    handleTodo={handleTodo}
+                    todo={todo}
+                    index={index}
+                  />
+                </span> */}
+              </div>
+            </>
+          ))}
       </div>
     </>
   );

@@ -1,62 +1,97 @@
-const Todo = require('../models/todo');
+const User = require("../models/user");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 
+const register = async (req, res) => {
+    try {
+        // Get user input
+        const { first_name, last_name, email, password } = req.body;
 
-const getTodo = async(req, res) => {
-    try{
-        const todo = await Todo.find();
-        res.send(todo);
-    }catch(err){
-        res.send(err);
-    }
-}
+        // Validate user input
+        if (!(email && password && first_name && last_name)) {
+            res.status(400).send("All input is required");
+        } else {
 
-const addTodo = async(req, res) => {
-    // const title = req.body.title;
-    // const status = req.body.status;
-    try{
-        // await Todo.insertMany({
-        //     title: title,
-        // })
-      const data=  await Todo.create(req.body)
-        res.send(data)
-    }catch(err){
-        res.send(err);
-    }
-}
+            // check if user already exist
+            // Validate if user exist in our database
+            const oldUser = await User.findOne({ email });
 
-const deleteTodo = async(req, res) => {
-    
-    try{
-        const id = req.params.id;
-        const data = await Todo.findOneAndDelete({_id: id});
-        res.send(data);
-    }catch(err){
-        res.send(err)
-    }
-}
+            if (oldUser) {
+                return res.status(409).send("User Already Exist. Please Login");
+            } else {
 
-const updateTodo = async(req, res) => {
-    try{
-        console.log("req.body::", req.body);
-        const id = req.body.id;
-        const {title, description, status} = req.body
-        const data = {
-            title: title,
-            description: description,
-            status: status,
+
+                //Encrypt user password
+                encryptedPassword = await bcrypt.hash(password, 10);
+
+                // Create user in our database
+                const user = await User.create({
+                    first_name,
+                    last_name,
+                    email: email.toLowerCase(), // sanitize: convert email to lowercase
+                    password: encryptedPassword,
+                });
+
+                // Create token
+                const token = jwt.sign(
+                    { id: user._id, email, first_name, last_name },
+                    process.env.TOKEN_KEY,
+                    {
+                        expiresIn: "2h",
+                    }
+                );
+                // save user token
+                user.token = token;
+
+                // return new user
+                res.status(201).json(user);
+            }
         }
-        const result = await Todo.findOneAndUpdate({_id: id}, data)
-        console.log(result);
-        res.send(result);
-    }catch(err){
-        res.send(err);
+
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+
+const login = async (req, res) => {
+    try {
+        // Get user input
+        const { email, password } = req.body;
+
+        // Validate user input
+        if (!(email && password)) {
+            res.status(400).send("All input is required");
+        }
+        // Validate if user exist in our database
+        const user = await User.findOne({ email });
+
+        if (user && (await bcrypt.compare(password, user.password))) {
+            // Create token
+            const token = jwt.sign(
+                { user_id: user._id, email },
+                process.env.TOKEN_KEY,
+                {
+                    expiresIn: "2h",
+                }
+            );
+
+            // save user token
+            user.token = token;
+
+            // user
+            res.status(200).json(user);
+        } else {
+
+            res.status(400).send("Invalid Credentials");
+        }
+    } catch (err) {
+        console.log(err);
     }
 }
 
 module.exports = {
-    addTodo,
-    getTodo,
-    deleteTodo,
-    updateTodo
+    register,
+    login
 }

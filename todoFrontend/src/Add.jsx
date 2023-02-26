@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Modal from "./Components/Modal/Modal";
 import axios from "axios";
 
-const rootUrl = "http://localhost:3001/user";
+const rootUrl = "http://localhost:3001/todo";
 
 const Add = (props) => {
   const [title, setTitle] = useState("");

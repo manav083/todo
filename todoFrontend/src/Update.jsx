@@ -3,7 +3,7 @@ import Modal from "./Components/Modal/Modal";
 import axios from "axios";
 import edit from "./assets/edit.png";
 
-const rootUrl = "http://localhost:3001/user";
+const rootUrl = "http://localhost:3001/todo";
 
 const Update = (props) => {
   const [title, setTitle] = useState(props.element.title);

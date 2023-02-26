@@ -3,7 +3,7 @@ import trash from "./assets/trash.png";
 import Modal from "./Components/Modal/Modal";
 import axios from "axios";
 
-const rootUrl = "http://localhost:3001/user";
+const rootUrl = "http://localhost:3001/todo";
 
 const Delete = (props) => {
   const [open, setOpen] = useState(false);
