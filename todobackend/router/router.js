@@ -20,6 +20,10 @@ router.post("/register", userController.register);
 // Login
 router.post("/login", userController.login);
 
+// Logout
+router.post("/logout", userController.logout);
+
+
 
 router.post("/welcome", auth, (req, res) => {
     // console.log("user::::::;", req.user);

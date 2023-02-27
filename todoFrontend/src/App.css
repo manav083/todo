@@ -28,7 +28,7 @@
 }
 
 .cardBody {
-  height: 100px;
+  height: auto;
   width: 300px;
   margin: 15px;
   padding: 20px;

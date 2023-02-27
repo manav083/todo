@@ -1,3 +1,8 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -25,6 +30,26 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+.loginForm{
+  min-width: 30vw;
+  /* margin: auto ; */
+  padding: 20px 40px;
+  text-align: center;
+  background-color: #303030;
+  box-shadow: 0px 0px 10px 10px #222;
+}
+
+.loginForm .label {
+  font-size: 18px;
+  width: 150px;
+  text-align: right;
+  margin-right: 20px;
+}
+
+.loginForm button {
+  margin-top: 20px;
 }
 
 button {

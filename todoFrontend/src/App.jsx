@@ -2,14 +2,13 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import axios from "axios";
 import Add from "./Add";
-import Update from "./Update";
-import Delete from "./Delete";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const rootUrl = "http://localhost:3001/todo";
 
 function App() {
   const [todo, setTodo] = useState([]);
+  const navigate = useNavigate();
 
   const handleTodo = (todo) => {
     setTodo(todo);
@@ -21,13 +20,22 @@ function App() {
     setTodo(result.data);
   };
 
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
+  }
+
   useEffect(() => {
     getTodo();
   }, []);
 
   return (
     <>
-      <h1 style={{ textAlign: "center" }}>Todo List App</h1>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 30 }}>
+        <h1 style={{ textAlign: "center" }}>Todo List App</h1>
+        <button style={{margin: 0}} onClick={logout}>Logout</button>
+      </div>
       <div>
         <Add handleTodo={handleTodo} todo={todo} />
       </div>

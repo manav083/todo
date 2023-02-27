@@ -10,7 +10,7 @@ const register = async (req, res) => {
 
         // Validate user input
         if (!(email && password && first_name && last_name)) {
-            res.status(400).send("All input is required");
+            res.status(201).send("All input is required");
         } else {
 
             // check if user already exist
@@ -18,7 +18,7 @@ const register = async (req, res) => {
             const oldUser = await User.findOne({ email });
 
             if (oldUser) {
-                return res.status(409).send("User Already Exist. Please Login");
+                return res.status(201).send("User Already Exist. Please Login");
             } else {
 
 
@@ -45,7 +45,7 @@ const register = async (req, res) => {
                 user.token = token;
 
                 // return new user
-                res.status(201).json(user);
+                res.status(200).json(user);
             }
         }
 
@@ -56,42 +56,57 @@ const register = async (req, res) => {
 
 
 const login = async (req, res) => {
+    // console.log("gsdvhbsfjnmg");
     try {
         // Get user input
         const { email, password } = req.body;
 
         // Validate user input
+        // console.log("!(email && password)", !(email && password), "email", email, "password", password);
         if (!(email && password)) {
-            res.status(400).send("All input is required");
-        }
-        // Validate if user exist in our database
-        const user = await User.findOne({ email });
-
-        if (user && (await bcrypt.compare(password, user.password))) {
-            // Create token
-            const token = jwt.sign(
-                { user_id: user._id, email },
-                process.env.TOKEN_KEY,
-                {
-                    expiresIn: "2h",
-                }
-            );
-
-            // save user token
-            user.token = token;
-
-            // user
-            res.status(200).json(user);
+            res.status(201).send("All input is required");
         } else {
 
-            res.status(400).send("Invalid Credentials");
+
+            // Validate if user exist in our database
+            const user = await User.findOne({ email });
+            // console.log("user::::", user, "(bcrypt.compare(password, user.password)", await (bcrypt.compare(password, user.password)));
+
+            if (user && (await bcrypt.compare(password, user.password))) {
+                // Create token
+                const token = jwt.sign(
+                    { user_id: user._id, email },
+                    process.env.TOKEN_KEY,
+                    {
+                        expiresIn: "2h",
+                    }
+                );
+                // console.log("token::",token)
+                // save user token
+                user.token = token;
+                // console.log("uesr::;;", user);
+                // user
+                res.status(200).send(user);
+            } else {
+
+                res.status(201).send("Invalid Credentials");
+            }
         }
     } catch (err) {
         console.log(err);
     }
 }
 
+const logout = () => {
+    try{
+        
+    }catch(err){
+        res.send(err);
+    }
+}
+
 module.exports = {
     register,
-    login
+    login,
+    logout
 }
